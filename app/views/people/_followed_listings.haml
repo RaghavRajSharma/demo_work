@@ -1,0 +1,26 @@
+.row
+  %h2.people-header
+    - if listings.count > 0
+      - if current_user?(@person)
+        - if listings.count == 1
+          = "#{listings.count} " + " Listing in Wishlist"
+        - else
+          = "#{listings.count} " + " Listings in Wishlist"
+    - else
+      = t("people.followed_listings.no_followed_listings")
+
+
+.people-fluid-thumbnail-grid-container
+  #profile-followed-people-list.people-fluid-thumbnail-grid
+    - unless listings.blank?
+      - listings.each do |listing|
+        .people-fluid-thumbnail-grid-item.mobile_small
+          %a.fluid-thumbnail-grid-image-item-link{:href => "#{listing_path(listing)}"}
+            .fluid-thumbnail-grid-image-image-container.customize_size
+              - first_image_url = (listing.listing_images.present? && listing.listing_images.first.image.present?) ? listing.listing_images.first.image.url(:small_3x2) : ""
+              = image_tag first_image_url, {:alt => listed_listing_title(listing), :class => "fluid-thumbnail-grid-image-image"}        
+              .fluid-thumbnail-grid-image-overlay
+              .fluid-thumbnail-grid-image-title
+                = listing.title
+          %div{id: "add_remove_wishlist_#{listing.id}"}    
+            = render :partial => "wishlists/wishlist_add_remove", locals: { listing_id: listing.id }

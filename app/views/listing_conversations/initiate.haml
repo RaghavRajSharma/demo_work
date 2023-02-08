@@ -1,0 +1,119 @@
+- content_for :javascript do
+  initialize_send_message_form('#{I18n.locale}');
+  ST.transaction.initializePayPalBuyForm("transaction-form", #{paypal_analytics_event.to_json.html_safe});
+
+- content_for :extra_javascript do
+  :javascript
+    $('#transaction-agreement-read-more').click(function() { $('#transaction-agreement-content').lightbox_me({centered: true, zIndex: 1000000}); });
+
+- content_for :title_header do
+  %h1
+    = action_button_label
+    = link_to(listing[:title], listing_path(listing[:id]))
+
+#new_message_form.centered-section
+
+  - author_link = link_to(author[:display_name], person_path(username: author[:username]))
+
+  .preauthorize-section
+    %h2.preauthorize-details-title
+      = t("listing_conversations.preauthorize.details")
+
+    %ul.no-bullets
+      %li
+        %div
+          = t("listing_conversations.preauthorize.by", listing: link_to("#{listing[:title]}", listing_path(listing[:id])), author: author_link).html_safe
+      %li
+        #price_break_down
+          = render partial: "transactions/price_break_down", locals: price_break_down_locals.merge(is_author: false)
+
+  = form_tag form_action, method: :post, id: "transaction-form" do
+
+    = hidden_field_tag(:start_on, start_on&.iso8601 )
+    = hidden_field_tag(:end_on, end_on&.iso8601)
+
+    .preauthorize-section
+      - if shipment.present?
+        %h3 Select shipping option 
+        - shipment.rates.each_with_index do |rate, i|
+          %div
+            = radio_button_tag 'rate', rate.amount, (i == 1) ? true : false, id: rate['object_id'], class: 'shipping_rate'
+            = "$#{rate.amount}"
+            = "(#{(rate.duration_terms)})"
+        = hidden_field_tag 'shipment_rate_id', shipment.rates[1]['object_id']
+      %h2
+        = t("conversations.new.optional_message_to", author_name: author_link).html_safe
+
+      .row
+        .col-12
+          = text_area_tag :message, nil, :class => "text_area"
+
+      - if @current_community.transaction_agreement_in_use
+        = render :partial => "listing_conversations/transaction_agreement_checkbox"
+
+      - if quantity
+        = hidden_field_tag :quantity, quantity
+
+      - if delivery_method
+        = hidden_field_tag :delivery, delivery_method
+
+      = hidden_field_tag :payment_type
+
+      - if stripe_in_use
+        .row
+          .col-12
+            %h2
+              = t("listing_conversations.stripe_payment.payment")
+        = render :partial => "listing_conversations/stripe_payment", locals: {  publishable_key: stripe_publishable_key, stripe_shipping_required: stripe_shipping_required, paypal_in_use: paypal_in_use, shipping_address_locals: shipping_address_locals}
+
+      - if paypal_in_use && !stripe_in_use
+        .row
+          .col-12.payment-button-wrapper.paypal-payment
+            = button_tag t("paypal.pay_with_paypal"), class: "checkout-with-paypal-button"
+
+      - if paypal_in_use  && stripe_in_use
+        .row
+          .col-12.paypal-or-stripe
+            %span
+              = t("paypal.or_pay_with_paypal")
+        .row
+          .col-12.payment-button-wrapper.paypal-payment
+            %button.checkout-with-paypal-button.paypal-image{type: 'button'}
+              = t("paypal.checkout_with")
+              = image_tag 'checkout_with_paypal.png'
+
+      - if stripe_in_use || paypal_in_use
+        .row
+          .col-12
+            %p
+              = t("listing_conversations.preauthorize.you_will_be_charged", author: author_link, expiration_period: paypal_expiration_period).html_safe
+
+  %noscript
+    = "For security reasons JavaScript has to be enabled"
+  = form_tag select_shipping_rate_path(listing_id: listing[:id]), method: :post, remote: true, id: 'select_ship_rate' do
+    - price_break_down_locals.each do |k,v|
+      - price_break_down_locals[k] = v.to_f  if v.class.to_s == 'Money'
+
+    = hidden_field_tag 'price_break_down_locals', price_break_down_locals
+    = hidden_field_tag 'ship_rate'
+  
+  - content_for :extra_javascript do
+    :javascript
+      $(function(){
+        $(".checkout-with-paypal-button").click(function(){
+          $("#payment_type").val("paypal");
+        });
+        $(".checkout-with-stripe-button").click(function(){
+          $("#payment_type").val("stripe");
+        });
+      });
+      $(".paypal-image").click(function(){
+        $("#payment_type").val("paypal");
+        $("#transaction-form").trigger("submit");
+      });
+
+      $('.shipping_rate').click(function(){
+        $("#shipment_rate_id").val($(this).attr('id'));
+        $("#ship_rate").val($(this).val());
+        $("#select_ship_rate").submit();
+      })

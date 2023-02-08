@@ -1,0 +1,2 @@
+= content_tag 'h2', (form.label :status_id, t("settings.profile.status"))
+= form.collection_select :status_id, Status.all, :id, :name

@@ -1,0 +1,25 @@
+.col-12.no_padding_default
+  - if @current_user.present? && @current_user&.has_wishlist?(listing_id)     
+    = link_to 'Remove from Wishlist', remove_listing_wishlists_path(listing_id), method: :delete, remote: true, class: 'button custom_button_Wishlist bd_red'
+  - else
+    = link_to 'Add to Wishlist', add_listing_wishlists_path(listing_id), method: :post, remote: true, class: 'button custom_button_Wishlist'
+
+:css
+  .custom_button_Wishlist{
+    background-color: lightgray;
+    width: 100%;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .bd_red {
+    width: 100%;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }       
+  .bd_red:hover{
+    background-color: #a91a1a;
+  }  

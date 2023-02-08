@@ -1,0 +1,8 @@
+= content_tag 'div', (form.label :license_type, t("settings.profile.license_type"))
+= form.collection_radio_buttons(:license_type, ProfileCustomField.find_by(name: "License").options, :name, :name) do |b|
+  =b.label(:"data-value" => b.value) { b.radio_button + ' ' + b.text }
+= content_tag 'div', (form.label :license_number, t("settings.profile.license_number"))
+.form-group
+  .input-group
+    %span.input-group-addon#current_license_type= "#{form.object.license_type}-" 
+    = form.text_field :license_number, :class => "form-control"

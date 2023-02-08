@@ -1,0 +1,13 @@
+- if show_price_filter || show_custom_fields
+  - if show_price_filter
+    = render :partial => "price_filter"
+
+  - if show_custom_fields
+    - if selected_category
+      = render :partial => "custom_filters", locals: { filters: filters, selected_category: selected_category }
+
+  = submit_tag 'Apply Filter' , class: 'phone_show'
+
+  = button_tag(class: 'filter_reset_hid') do
+    = link_to 'Reset Search', '/s', class: 'filter-reset-btn'
+

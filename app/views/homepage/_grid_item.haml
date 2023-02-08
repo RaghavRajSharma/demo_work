@@ -1,0 +1,32 @@
+-# frontpage_fragment_cache("grid_item", listing) do
+
+.home-fluid-thumbnail-grid-item.small
+  %div
+    -# Listing image
+    = render :partial => "layouts/grid_item_listing_image", :locals => {:listing => listing, :modifier_class => "" }
+
+    -# Listing author details
+    .home-fluid-thumbnail-grid-author
+      .home-fluid-thumbnail-grid-author-avatar
+        = link_to(person_path(username: listing.author.username)) do
+          = image_tag(listing.author.avatar.thumb || missing_avatar(:thumb), :class => "home-fluid-thumbnail-grid-author-avatar-image")
+
+      - distance = Maybe(listing.distance).or_else(nil)
+      - name = PersonViewUtils.person_entity_display_name(listing.author, @current_community.name_display_type)
+      - if(!show_distance || distance.blank?)
+        = link_to(person_path(username: listing.author.username), :class => "home-fluid-thumbnail-grid-author-name redesign-author-name", title: name) do
+          = name
+        - if @current_user && @fb && listing.author.authentication_token && @current_user.id != listing.author.id
+          %span.home-fluid-thumbnail-grid-common-friends
+            - common_friends = @fb.mutual_friends(listing.author.authentication_token) rescue []
+            - common_friends_count = common_friends.size
+            - if common_friends_count > 0
+              = "Mutual Friends(#{common_friends_count})"
+      - else
+        .home-fluid-thumbnail-grid-details
+          = link_to(person_path(username: listing.author.username), class: "home-fluid-thumbnail-grid-details-author-name", title: name) do
+            = name
+          - dist = format_distance(distance)
+          - dist_string = "#{dist} #{listing.distance_unit}"
+          .home-fluid-thumbnail-grid-details-distance{title: dist_string}
+            = dist_string

@@ -1,0 +1,4 @@
+-# TODO: Add default value of 'flea' here
+= content_tag 'div', (form.label :rating_ids, t("settings.profile.rating"))
+= form.collection_check_boxes(:rating_ids, Rating.all, :id, :name, :item_wrapper_class => 'inline') do |b|
+  =b.label(:"data-value" => b.value) { b.check_box + ' ' + b.text }

@@ -1,0 +1,105 @@
+-# frontpage_fragment_cache("list_item", listing) do
+.home-list-item.mobile_right_price
+  - if listing.listing_images.size > 0
+    = link_to listing_path(listing.url), :class => "home-list-image-container-desktop" do
+      = image_tag listing.listing_images.first[:small_3x2], {:alt => listed_listing_title(listing), :class => "home-list-image"}
+  - if listing.listing_images.size > 0
+    = link_to listing_path(listing.url), :class => "home-list-image-container-mobile" do
+      = image_tag listing.listing_images.first[:thumb], {:alt => listed_listing_title(listing), :class => "home-list-image"}
+  .home-list-details-right
+    .home-list-price
+      - if listing.price
+        .home-list-item-price-value
+          %span= MoneyViewUtils.to_humanized(listing.price)
+        - price_text = nil
+        - if listing.quantity.present?
+          - price_text = t("listings.form.price.per") + " " + listing.quantity
+        - elsif listing.unit_type
+          - price_text = price_quantity_per_unit(listing)
+
+        - if price_text.present?
+          .home-list-price-quantity{:title => price_text}
+            = price_text
+      - else
+        .home-list-listing-shape-value
+          = shape_name(listing)
+
+    - unless @view_type.eql?("list")
+      - if @current_user && (@current_user.id == listing.author.id || @current_user.has_admin_rights?(@current_community))
+        .is_willing
+          / %input{"data-off" => "Sell separately ", "data-on" => "Bundle only", "data-toggle" => "toggle", :type => "checkbox", checked: listing.willing_to_piece ? false : true, class: "is_willing_to_piece is_willing_to_piece_#{listing.id}", value: listing.id, data: {id: listing.id}}
+
+          %input{:name => "desktop_bundle_only_or_willing_to_peice#{listing.id}", :type => "radio", :value => listing.id, checked: listing.willing_to_piece ? true : false, class: "is_willing_to_piece is_willing_to_piece_#{listing.id}", data: {id: listing.id}}
+          Sell separately
+
+          %br/
+          %input{:name => "desktop_bundle_only_or_willing_to_peice#{listing.id}", :type => "radio", :value => listing.id, checked: listing.willing_to_piece ? false : true, class: "is_willing_to_piece is_willing_to_piece_#{listing.id}", data: {id: listing.id}}
+          Bundle only
+          %br/
+
+
+  %div{:class => (listing.listing_images.size > 0 ? "home-list-details-with-image" : "")}
+    %h2.home-list-title
+      = link_to listing_path(listing.url) do
+        .title_wrap
+          = listing.title
+        .category_name
+          = listing.category_name
+        / - if @current_community.show_category_in_listing_list
+        /   %a.home-share-type-link{:href => search_path(:transaction_type => shape_name_map[listing.listing_shape_id], :view => :list)}
+        /     =# icon_tag(listing.icon_name, ["icon-fix"])
+        /     =# shape_name(listing)
+    .home-list-price-mobile{:class => (listing.listing_images.size > 0 ? "home-list-price-mobile-with-listing-image" : "home-list-price-mobile-without-listing-image")}
+      .author-image
+        = link_to(person_path(username: listing.author.username), :class => "home-fluid-thumbnail-grid-author-avatar-image") do
+          = image_tag(listing.author.avatar.thumb || missing_avatar(:thumb))
+      .author-name
+        - name = PersonViewUtils.person_entity_display_name(listing.author, @current_community.name_display_type)
+        = link_to(person_path(username: listing.author.username), title: name) do
+          = name
+    .mobile-price
+      - if listing.price
+        .home-list-price-value-mobile
+          = MoneyViewUtils.to_humanized(listing.price)
+        - price_text = nil
+        - if listing.quantity.present?
+          - price_text = t("listings.form.price.per") + " " + listing.quantity
+        - elsif listing.unit_type
+          - price_text = price_quantity_per_unit(listing)
+        - if price_text.present?
+          .home-list-price-quantity{:title => price_text}
+            = price_text
+      - else
+        .home-list-shape-value-mobile
+          = shape_name(listing)
+      - unless @view_type.eql?("list")
+        - if @current_user && (@current_user.id == listing.author.id || @current_user.has_admin_rights?(@current_community))
+          .is_willing
+            / %input{"data-off" => "Sell separately ", "data-on" => "Bundle only", "data-toggle" => "toggle", :type => "checkbox", checked: listing.willing_to_piece ? false : true, class: "is_willing_to_piece is_willing_to_piece_#{listing.id}", value: listing.id, data: {id: listing.id}}
+
+            %input{:name => "bundle_only_or_willing_to_peice#{listing.id}", :type => "radio", :value => listing.id, checked: listing.willing_to_piece ? true : false, class: "is_willing_to_piece is_willing_to_piece_#{listing.id}", data: {id: listing.id}}
+            Sell separately
+
+            %br/
+            %input{:name => "bundle_only_or_willing_to_peice#{listing.id}", :type => "radio", :value => listing.id, checked: listing.willing_to_piece ? false : true, class: "is_willing_to_piece is_willing_to_piece_#{listing.id}", data: {id: listing.id}}
+            Bundle only
+            %br/            
+      
+
+
+  .home-list-author{:class => (listing.listing_images.size > 0 ? "home-list-author-with-listing-image" : "home-list-author-without-listing-image")}
+    .home-list-avatar
+      = link_to(person_path(username: listing.author.username), :class => "home-fluid-thumbnail-grid-author-avatar-image") do
+        = image_tag(listing.author.avatar.thumb || missing_avatar(:thumb))
+    .home-list-author-details
+      = link_to(person_path(username: listing.author.username), :class => "home-list-author-name") do
+        = PersonViewUtils.person_entity_display_name(listing.author, @current_community.name_display_type)
+      - if @current_user && @fb && listing.author.authentication_token && @current_user.id != listing.author.id
+        .home-list-author-reviews
+          - common_friends_count = @fb.mutual_friends(listing.author.authentication_token).size
+          - if common_friends_count > 0
+            = "Mutual Friends(#{common_friends_count})"  
+      .home-list-author-reviews
+        - unless listing.author.num_of_reviews < 0
+          = icon_tag("testimonial")
+          = pluralize(listing.author.num_of_reviews, t(".review"), t(".reviews"))

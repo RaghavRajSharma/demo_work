@@ -1,0 +1,3 @@
+= content_tag 'div', (form.label :jumping_since, t("settings.profile.jumping_since"))
+= form.collection_select :jumping_since, ProfileCustomField.find_by(name: "Jumpin' since").options.order(:name), :name, :name
+

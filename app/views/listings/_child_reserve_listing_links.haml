@@ -1,0 +1,13 @@
+- if listing.child_reserve 
+  .child-listing-details{:id => "details-#{listing.child_reserve.category.id}"}
+    - includes = [:author, :listing_images, :num_of_reviews]
+    - listing_hash = ListingIndexService::Search::Converters.listing_hash(listing.child_reserve, includes.to_set)
+    - list_item = ListingIndexViewUtils.to_single_struct(listing_hash, includes.to_set)
+    - shape_name_map = @current_community.shapes.map { |s| [s[:id], s[:name]]}.to_h
+    = render partial: "homepage/list_item", locals: { listing: list_item, shape_name_map: shape_name_map }  
+    .more-info-links
+      = more_info_link(listing.child_reserve)
+    .remove-child-link
+      = remove_child_listing_link(listing, "reserve")
+- else
+  = show_edit_options_for_child_listing(listing, "Reserve")

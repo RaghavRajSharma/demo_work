@@ -1,0 +1,61 @@
+= render partial: 'mutual_friends', locals: { friends_in_common: @friends_in_common }
+ 
+- if person.jump_number.present?
+  %p.gap_less 
+    %b= "#{t('settings.profile.jump_number')} : " 
+    = "#{person.jump_number ? pluralize(person.jump_number, 'jump') : ''}"
+
+- if person.membership_association.present?
+  %p.gap_less
+    %b= "#{t('settings.profile.membership_association')}:"
+    = "#{person.membership_association}"
+
+- if person.membership_number.present?    
+  %p.gap_less
+    %b= "#{t('settings.profile.membership_number')}:"
+    = "#{person.membership_number}"
+
+- if person.license_type.present?    
+  %p.gap_less
+    %b= "#{t('settings.profile.license_type')}:" 
+    = "#{person.license_type}"
+
+- if  person.license_number.present?   
+  %p.gap_less
+    %b= "#{t('settings.profile.license_number')}:" 
+    ="#{person.license_number}"
+
+- if person.ratings.pluck(:name).join(', ').present?        
+  %p.gap_less
+    %b= "#{t('settings.profile.rating')}:"
+    =" #{person.ratings.pluck(:name).join(', ')}"
+
+- if person.profession.present?       
+  %p.gap_less
+    %b= "#{t('settings.profile.profession')}:"
+    =" #{person.profession}"
+
+- if person.favorite_discipline && person.favorite_discipline.name.present?   
+  %p.gap_less
+    %b= "#{t('settings.profile.favorite_discipline')}:"
+    =" #{person.favorite_discipline && person.favorite_discipline.name}"
+
+- if person.disciplines.pluck(:name).join(', ').present?    
+  %p.gap_less
+    %b= "#{t('settings.profile.other_disciplines')}:"
+    =" #{person.disciplines.pluck(:name).join(', ')}"
+
+- if person.home_dropzone && person.home_dropzone.name.present?    
+  %p.gap_less
+    %b= "#{t('settings.profile.home_dropzone')}:"
+    =" #{person.home_dropzone && person.home_dropzone.name}"  
+
+- if person.dropzones.pluck(:name).join(', ').present?   
+  %p.gap_less
+    %b= "#{t('settings.profile.other_dropzones')}:"
+    =" #{person.dropzones.pluck(:name).join(', ')}"
+
+- if person.jumping_since.present?    
+  %p.gap_less
+    %b= "#{t('settings.profile.jumping_since')}:"
+    =" #{person.jumping_since}"

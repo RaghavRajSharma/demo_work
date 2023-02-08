@@ -1,0 +1,26 @@
+= form.label :title, t(".listing_title") + "*", :class => "input display-inline"
+%i.icon-info-sign.icn
+.tooltip 
+  A descriptive title helps buyers find your item. State exactly what your item is. Include words that buyers will use to search for your item.
+  = link_to 'Learn more','javascript:;'
+  %i.fa.fa-caret-down.left_arrow
+  %i.fa.fa-caret-down.left_arrow.right
+= render partial: "layouts/info_text", locals: { text: "A descriptive title helps buyers find your item. State exactly what your item is. Include words that buyers will use to search for your item" }
+= form.text_field(:title, :class => "title_text_field", :maxlength => "60", id: "listing-title")
+#listing-title-suggestion
+
+- content_for :tooltip do
+  :javascript
+    $(document).ready(function(){
+      $(".icn").mouseover(function(){
+        $(".tooltip").addClass("active");
+      });
+      $(".icn").mouseout(function(){
+        $(".tooltip").removeClass("active");
+      });
+    });
+- if run_js_immediately
+  = yield :tooltip
+- else
+  - content_for :extra_javascript do
+    = yield :tooltip

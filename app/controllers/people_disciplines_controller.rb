@@ -1,0 +1,2 @@
+class PeopleDisciplinesController < ApplicationController
+end

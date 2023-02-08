@@ -1,0 +1,92 @@
+<!-- https://github.com/infinum/cookies_eu -->
+<% if cookies && cookies['cookie_eu_consented'] != 'true' %>
+  <div class="custom_footer cookies-eu js-cookies-eu">
+    <span class="cookies-eu-content-holder custom_text">This website uses cookies to ensure you get the best experience on our website.
+      <%= link_to 'Learn more', privacy_infos_path%>
+    </span>
+    <span class="cookies-eu-button-holder bttn">
+    <button class="cookies-eu-ok js-cookies-eu-ok button"> Accept </button>
+    <% if defined?(link).present? %>
+      <a href="<%= link %>" class="cookies-eu-link" target="<%= defined?(target).present? ? target : '' %>"> <%= t('cookies_eu.learn_more') %> </a>
+    <% end %>
+    </span>
+  </div>
+<% end %>
+
+<style type="text/css">
+  .custom_footer{
+    padding:0 25px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(0, 0, 0);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: fixed;
+    z-index: 999;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  span.cookies-eu-content-holder.custom_text{
+    padding: 0;
+    width: 78%;
+    display: block;
+    text-align: left;
+    line-height: normal;
+  }
+  span.cookies-eu-content-holder.custom_text a{
+    color: #fff;
+    text-decoration: underline;
+    margin-left: 5px;
+  }
+  .bttn{
+    display: block;
+    width: 22%;
+  }
+  .cookies-eu .bttn .button{
+    padding: 11px 50px;
+    font-size: 18px;
+    font-weight: normal;
+    border-radius: 0px;
+    float: right;
+    color: #fff;
+    background-color: #7d00ba;
+  }
+  .cookies-eu .bttn .button:hover{
+    background-color: #690998;
+  }
+  @media screen and (max-width: 768px) and (min-width: 220px){
+    .cookies-eu{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    span.cookies-eu-content-holder.custom_text{
+      text-align: center;
+      width: 100%;
+      line-height: 1.5;
+    }
+    .cookies-eu .bttn .button{
+      float: none;
+      margin: 0 auto;
+      display: block;
+      width: 100%;
+      padding: 6px;
+      font-size: 15px;
+
+    }
+    .bttn{
+      display: block;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .cookies-eu{
+      padding: 10px 15px;
+      z-index: 99999;
+    }
+  }
+</style>
+
+
+

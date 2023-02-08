@@ -1,0 +1,4 @@
+- if @current_user.has_wishlist?(listing_id)
+  = link_to 'Remove', remove_listing_wishlists_path(listing_id), remote: true, method: :delete 
+- else
+  = link_to 'Add', add_listing_wishlists_path(listing_id), remote: true, method: :post

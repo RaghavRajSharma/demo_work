@@ -1,0 +1,70 @@
+- content_for :title_header do
+  %h1
+    = t("layouts.admin.admin")
+    = "-"
+    = "Listings"
+
+= render :partial => "admin/left_hand_navigation", :locals => { :links => admin_links_for(@current_community) }
+
+.left-navi-section
+  %h2 View Listings
+
+  = form_tag '', :method => :get do
+    .row
+      .col-8
+        = text_field_tag :query, params[:query], placeholder: 'Search for a listing title'
+      .col-4
+        = submit_tag t("admin.communities.manage_members.search"), class: 'button search-button'
+        = link_to t("admin.communities.manage_members.reset_search"), admin_community_listings_path(@current_community.id)
+
+  - if params[:query].blank?
+    #export-as-csv.right= link_to(" " + t("admin.communities.manage_members.export_all_as_csv"), {format: :csv}, {class: "js-users-csv-export " + icon_class("download")})
+
+  %span#admin_transactions_count= page_entries_info(@listings)
+
+  %table
+    %thead
+      %tr
+        %th Title
+        %th Seller
+        %th Date Listed
+        %th Status
+        %th Edit
+        %th Delete
+        %th Note
+
+    %tbody
+      - @listings.each do |listing|
+        %tr
+          %td= link_to listing.title, listing, target: '_blank'
+          %td= link_to listing.author.name_or_username, listing.author, target: '_blank'
+          %td= l(listing.created_at, format: :short_date)
+          %td= listing.current_state
+          %td= link_to 'Edit', edit_listing_path(listing), target: '_blank'
+          %td
+            - unless listing.deleted?
+              = link_to 'Delete', '#', data: { delete_url: admin_community_listing_path(@current_community, listing) }, class: 'delete_listing'
+            - else
+              = link_to 'Add again', add_admin_community_listing_path(@current_community, listing), method: :patch, data: {confirm: 'This will add the listing to the marketplace again. Are you sure you want to add?'}
+          %td= listing.delete_note
+  .row
+    .col-12
+      = will_paginate @listings
+
+  = render layout: "layouts/lightbox", locals: { id: "delete_note_form"} do
+    = form_tag '#', class: 'note_form', method: :delete do
+      %p
+        This removes the listing from the marketplace and nobody will be able to access the listing anymore. Put the note below for your future reference.
+      = label_tag 'Delete Note'
+      = text_area_tag :delete_note, nil, rows: 5
+      = submit_tag 'Delete', class: 'button'
+
+- content_for :extra_javascript do
+  :javascript
+    $('.delete_listing').click(function(e){
+      e.preventDefault();
+      url = $(this).data('delete-url');
+      $('#delete_note_form').lightbox_me({centered: true, zIndex: 1000000});
+      $(".note_form").attr('action', url);
+    });
+

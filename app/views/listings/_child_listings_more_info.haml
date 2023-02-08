@@ -1,0 +1,6 @@
+= content_tag 'p', link_to('More Info', '#', :class => 'more-info', :id => "#{listing.id}")
+= content_tag 'ul', :style => 'list-style: none; display: none', :class => 'info-list', :id => "info-#{listing.id}" do
+  - listing.custom_field_values.each do |custom_field_value|
+    - custom_field_value.with_type do |question_type|
+      %li
+        = render :partial => "listings/custom_field_partials/#{question_type}", :locals => { :custom_field_value => custom_field_value }

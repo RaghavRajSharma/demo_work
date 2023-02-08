@@ -1,0 +1,16 @@
+// The fonts file has to be the first one, since there are @imports in the fonts file
+//= require ./fonts
+
+// Vendor
+//= require jquery.nouislider
+//= require jquery.fileupload
+//= require datepicker3
+//= require selectize
+//= require bootstrap-toggle.min
+//= require ./reset
+//= require ./main
+
+//= require_tree ./partials
+//= require_tree ./views
+@import "font-awesome";
+@import 'cookies_eu';

@@ -1,0 +1,2 @@
+= content_tag 'div', (form.label :jump_number, t("settings.profile.jump_number"))
+= form.collection_select :jump_number, ProfileCustomField.find_by(name: "Jump #").options, :name, :name

@@ -1,0 +1,36 @@
+@import "mixins/all";
+
+.no-bullets {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.child-listing-details{
+  float: left;
+  width: 100%;
+  margin-bottom: 1.5em;
+  border-bottom: 1px solid $border;
+  .home-list-item{
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border: none;
+  }
+  .more-info-links, .remove-child-link{
+  	width: 50%;
+  	float: left;
+  }
+}
+
+.is_willing {
+  margin-top: 15px;
+  float: left;
+  text-align: right;
+  width: 100%;
+  @media (min-width: 320px) and (max-width: 480px) {
+    margin-top: 0px;
+  }
+  .toggle {
+    width: 150px !important;
+    float: right;
+  }
+}

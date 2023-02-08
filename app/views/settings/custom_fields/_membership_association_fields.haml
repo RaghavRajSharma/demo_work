@@ -1,0 +1,4 @@
+= content_tag 'div', (form.label :membership_association, t("settings.profile.membership_association"))
+= form.collection_select(:membership_association, ProfileCustomField.find_by(name: "Association").options, :name, :name)
+= content_tag 'div', (form.label :membership_number, t("settings.profile.membership_number"))
+= form.text_field :membership_number

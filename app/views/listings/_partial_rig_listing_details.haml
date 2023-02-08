@@ -1,0 +1,9 @@
+= content_tag 'h1', "Container"
+= render :partial => "listings/child_container_listing_links", :locals => { :listing => listing } 
+= content_tag 'h1', "Main"
+= render :partial => "listings/child_main_listing_links", :locals => { :listing => listing } 
+%h2= "-- or --"
+= content_tag 'h1', "Reserve"
+= render :partial => "listings/child_reserve_listing_links", :locals => { :listing => listing } 
+= content_tag 'h1', "AAD (optional)"
+= render :partial => "listings/child_aad_listing_links", :locals => { :listing => listing } 

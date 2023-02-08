@@ -1,0 +1,47 @@
+---
+:Person:
+  :image:
+  - :medium
+  - :original
+  - :small
+  - :thumb
+:CreateSquareImagesJob::ListingImage:
+  :image:
+  - :square
+  - :square_2x
+:Community:
+  :logo:
+  - :apple_touch
+  - :header
+  - :header_icon
+  - :header_icon_highres
+  - :original
+  :wide_logo:
+  - :header
+  - :header_highres
+  - :original
+  - :paypal
+  :cover_photo:
+  - :hd_header
+  - :header
+  - :original
+  :small_cover_photo:
+  - :hd_header
+  - :header
+  - :original
+  :favicon:
+  - :favicon
+:ListingImage:
+  :image:
+  - :big
+  - :email
+  - :medium
+  - :original
+  - :small_3x2
+  - :square
+  - :square_2x
+  - :thumb
+:Mercury::Image:
+  :image:
+  - :medium
+  - :thumb

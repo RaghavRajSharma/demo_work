@@ -1,0 +1,32 @@
+- if subcategory || category 
+  %div{:id => "links-#{subcategory || category}"} 
+    %p.add_item_links{style: 'margin-bottom: 2em;'}
+      =# link_to "Add New Item", "#", {style: 'padding: 0.5625em 1.5em; background-color: #7d00ba; color: white; border-radius: 5px; margin-right: 15px;', class: 'add_item willing-to-piece', 'data-id': subcategory || category}
+      = link_to "Add New Item", new_listing_path(category: subcategory || category, parent_id: listing.id, willing_to_piece: 1), class: 'willing-to-piece', style: 'padding: 0.5625em 1.5em; background-color: #7d00ba; color: white; border-radius: 5px; margin-right: 15px;'
+      = content_tag 'span', "     "
+
+      = link_to "Add Existing Item", "#", {style: 'padding:0.5625em 1.5em; background-color: #7d00ba; color: white; border-radius: 5px; margin-right: 15px;', class: 'add_existing_item', 'data-id': subcategory || category}
+  
+
+    %p.new_child_listing_links.hidden{:id => "new-#{subcategory || category}"}
+      %span.add_new= new_willing_to_piece_link(listing, category, subcategory)
+      = content_tag 'span', "-- or --"
+      = new_not_willing_to_piece_link(listing, category, subcategory)
+      
+
+    = add_child_listings_to_multi_listing(listing, category, subcategory)
+- else 
+  %div{:id => "links-package"} 
+    %p.add_item_links{style: 'margin-bottom: 2em;'}
+      =# link_to "Add New Item", "#", {style: 'padding: 0.5625em 1.5em; background-color: #7d00ba; color: white; border-radius: 5px; margin-right: 15px;', class: 'add_item', 'data-id': 'package' }
+      = link_to "Add New Item", new_listing_path(parent_id: listing.id, willing_to_piece: 1), class: 'willing-to-piece', style: 'padding: 0.5625em 1.5em; background-color: #7d00ba; color: white; border-radius: 5px; margin-right: 15px;'
+      = content_tag 'span', "     "
+      = link_to "Add Existing Item", "#", {style: 'padding:0.5625em 1.5em; background-color: #7d00ba; color: white; border-radius: 5px; margin-right: 15px;', class: 'add_existing_item', 'data-id': 'package' }
+  
+
+    %p.new_child_listing_links.hidden{:id => "new-package"}
+      %span.add_new= new_willing_to_piece_link(listing)
+      = content_tag 'span', "-- or --"
+      = new_not_willing_to_piece_link(listing)
+
+    = add_child_listings_to_multi_listing(listing)

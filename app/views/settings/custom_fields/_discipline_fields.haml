@@ -1,0 +1,5 @@
+= content_tag 'div', (form.label :favorite_discipline, t("settings.profile.favorite_discipline"))
+= form.collection_select :favorite_discipline_id, Discipline.all, :id, :name, :include_blank => true 
+= content_tag 'div', (form.label :discipline_ids, t("settings.profile.other_disciplines"))
+= form.collection_check_boxes(:discipline_ids, Discipline.all, :id, :name, :item_wrapper_class => 'inline') do |b|
+  = b.label(:"data-value" => b.value) { b.check_box + ' ' + b.text }

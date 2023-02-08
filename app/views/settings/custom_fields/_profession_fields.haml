@@ -1,0 +1,17 @@
+= content_tag 'div', (form.label :profession, t("settings.profile.profession"))
+- options = ProfileCustomField.find_by(name: "Profession").options.pluck(:name, :name) + ["Other"]
+- selected_option = !options.include?(form.object.profession) ? "Other" : form.object.profession
+= form.select :profession, options_for_select(options, selected_option)
+= text_field_tag :profession, selected_option.eql?("Other") ? form.object.profession: '', :style => "#{selected_option.eql?('Other') ? '' : 'display:none;'}", :id => "other_profession"
+
+- content_for :extra_javascript do
+  :javascript
+    $('#person_profession').change(function(){
+      if($(this).val() == "Other"){
+        $('#other_profession').show();
+      }else{
+        $('#other_profession').hide();
+      }
+    })
+  
+

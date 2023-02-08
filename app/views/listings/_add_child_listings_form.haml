@@ -1,0 +1,15 @@
+-if logged_in?
+  -if subcategory || category
+    =form_tag(add_child_listings_path(params[:locale], listing), { :class => "add_existing_form", :style => 'display: none;', :id => "existing-#{subcategory || category}"}) do |f|
+      =hidden_field_tag 'type', subcategory || category
+      =collection_radio_buttons(:listing, :new_child, @current_user.listings.where(:category_id => subcategory || category, open: true), :id, :title) do |b|
+        =b.label(:"data-value" => b.value) { b.radio_button + ' ' + b.text }
+      = submit_tag 'Save', class: 'button'
+  -else
+    =form_tag(add_child_listings_path(params[:locale], listing), { :class => "add_existing_form", :style => 'display: none;' }) do |f|
+      -@current_user.listings.where(open: true).group_by { |l| l.category }.each do |category, listings|
+        - unless category.is_multi_listing?
+          =content_tag 'h2', category.translations.first.name.singularize, :style => 'margin: 1em 0 0;'
+          =collection_check_boxes(:listing, :child_ids, listings, :id, :title, :item_wrapper_class => 'inline') do |b|
+            =b.label(:"data-value" => b.value) { b.check_box + ' ' + b.text }
+      = submit_tag 'Save', class: 'button'

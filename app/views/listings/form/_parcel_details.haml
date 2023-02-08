@@ -1,0 +1,44 @@
+#parcel-details
+  = form.label :length, "Length(inch)"
+  = form.text_field :length, class: "price-field",placeholder: "0"
+  = form.label :width, "Width(inch)"
+  = form.text_field :width, class: "price-field",placeholder: "0"
+  = form.label :height, "Height(inch)"
+  = form.text_field :height, class: "price-field",placeholder: "0"
+  = form.label :weight, "Weight(lb)"
+  = form.text_field :weight, class: "price-field",placeholder: "0"
+
+
+  - content_for :price_details_js do
+    :javascript
+      if ($('#shipping-checkbox').prop("checked") == true){
+        $("#listing_length").attr('required', true);
+        $("#listing_width").attr('required', true);
+        $("#listing_height").attr('required', true);
+        $("#listing_weight").attr('required', true);
+        $('#parcel-details').show();
+      }
+      else{
+        $("#listing_length").attr('required', false);
+        $("#listing_width").attr('required', false);
+        $("#listing_height").attr('required', false);
+        $("#listing_weight").attr('required', false);
+        $('#parcel-details').hide();
+      }
+      $('#shipping-checkbox').click(function(){
+        if($(this).prop("checked") == true){
+          $("#listing_length").attr('required', true);
+          $("#listing_width").attr('required', true);
+          $("#listing_height").attr('required', true);
+          $("#listing_weight").attr('required', true);
+          $('#parcel-details').show();
+        }
+        else if($(this).prop("checked") == false){
+          $('#parcel-details').hide();
+        }
+      });
+  - if run_js_immediately
+    = yield :price_details_js
+  - else
+    - content_for :extra_javascript do
+      = yield :price_details_js

@@ -1,0 +1,21 @@
+= content_tag 'div', (form.label :home_dropzone_name, t("settings.profile.home_dropzone"))
+= form.select :home_dropzone_name, dropzone_list, include_blank: true
+
+- content_for :extra_javascript do
+  :javascript
+    var selectize = $('#other_dropzones').selectize({plugins: ['remove_button'], delimiter: ',', maxItems: 5, placeholder: "Please select maximum 5 drop zones."})[0].selectize;
+    selectize.on("change", function(value) {
+      $('.edit_person').valid();
+    });
+    var dropzones = $('#person_home_dropzone_name').selectize({
+      create: true
+    });
+    dropzones.on("change", function(value) {
+      $('.edit_person').valid();
+    });
+    
+= content_tag 'div', (form.label :dropzone_ids, t("settings.profile.other_dropzones"))
+%select#other_dropzones{ :name => "person[dropzone_ids][]", :multiple => true }
+  - dropzone_list.each do |dz|
+    %option{ value: dz[1], selected: !!(@current_user && @current_user.dropzones.pluck(:id).include?(dz[1])) }
+      = dz[0]

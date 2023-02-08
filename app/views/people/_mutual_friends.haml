@@ -1,0 +1,10 @@
+- if friends_in_common.present?
+  .row
+    .col-6
+      Friends in Common:
+    .col-6
+      - friends_in_common.each do |friend|
+        - if friend[:flyingflea_username].present?
+          = link_to (image_tag friend[:image], title: friend['name'], class: 'common_friends_thumb'), person_path(friend[:flyingflea_username]), target: '_blank'
+        - else
+          = link_to (image_tag friend[:image], title: friend['name'], class: 'common_friends_thumb'), "https://facebook.com/#{friend['id']}", target: '_blank'

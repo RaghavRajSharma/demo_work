@@ -1,0 +1,31 @@
+$("#homepage").html("<%=j render partial: 'homepage', locals: {listing_shape_menu_enabled: listing_shape_menu_enabled, category_menu_enabled: @category_menu_enabled, selected_shape: selected_shape, search_params: search_params, show_categories: @show_categories, selected_category: selected_category, show_price_filter: show_price_filter, show_custom_fields: @show_custom_fields, filters: filters, main_categories: @main_categories, shapes: shapes, location_search_in_use: location_search_in_use, current_search_path_without_page: current_search_path_without_page, current_page: current_page, shape_name_map: shape_name_map}%>");
+intiFilters();
+var search_params = '<%=search_params.except(:controller, :action).to_json%>';
+params = JSON.parse(search_params.replace(/&quot;/g,'"'));
+
+$('.filter-search').change(function(){
+  name = $(this).attr('name');
+  value = $(this).val();
+  if( $(this).is(':checked')){
+    params[name] = value;
+  }else{
+    delete params[name];
+  }
+  query = $.param(params);
+  $("form#homepage-filters").attr("action", "/?" + query).submit();
+});
+
+// Mobile view toggle subcategories.
+$(".custom_align_small").click(function(){
+  $(this).next(".show").toggle();
+  $(this).find('.toogle_caret_down').toggleClass("rotate180");
+});
+
+// Reset all filters on click of a category
+$('.home-categories-main').click(function(){
+  $(this).attr('href', $(this).data('searchUrl'));
+  $("form#homepage-filters").attr("action", "/s");
+  $('input[type=search]').val('');
+  $('#q').val('');
+  history.pushState({}, null, document.location.origin);
+});
